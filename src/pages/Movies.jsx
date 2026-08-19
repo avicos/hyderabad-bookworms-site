@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { supabase } from "../lib/supabase";
+import "./Movies.css";
 
 function Movies() {
   const [movies, setMovies] = useState([]);
@@ -27,56 +28,79 @@ function Movies() {
     fetchMovies();
   }, []);
 
+  // Group movies by year
+  const groupedMovies = movies.reduce((acc, movie) => {
+    if (!acc[movie.year]) {
+      acc[movie.year] = [];
+    }
+
+    acc[movie.year].push(movie);
+
+    return acc;
+  }, {});
+
+  const years = Object.keys(groupedMovies).sort(
+    (a, b) => Number(b) - Number(a)
+  );
+
   return (
     <>
       <Navbar />
 
-      <main className="page">
-        <p className="eyebrow">OUR WATCHING HISTORY</p>
+      <main className="movies-page">
+        <div className="movies-header">
+          <p className="eyebrow">OUR WATCHING HISTORY</p>
 
-        <h1>Movies</h1>
+          <h1>Movies</h1>
 
-        <p className="page-intro">
-          Every Movie of the Month we've watched together.
-        </p>
+          <p className="movies-intro">
+            Every Movie of the Month we've watched together.
+          </p>
+        </div>
 
         {loading ? (
-          <p>Loading movies...</p>
+          <p className="movies-loading">Loading movies...</p>
         ) : movies.length === 0 ? (
-          <p>No movies yet.</p>
+          <p className="movies-empty">
+            No movies have been added yet.
+          </p>
         ) : (
-          <div className="book-list">
-            {movies.map((movie) => (
-              <article className="book-card" key={movie.id}>
-                <div className="book-card-image">
-                  {movie.poster_image ? (
-                    <img
-                      src={movie.poster_image}
-                      alt={movie.title}
-                    />
-                  ) : (
-                    <span>MOVIE</span>
-                  )}
+          <div className="movie-history">
+            {years.map((year) => (
+              <section className="movie-year" key={year}>
+                <h2 className="movie-year-title">{year}</h2>
+
+                <div className="movie-grid">
+                  {groupedMovies[year].map((movie) => (
+                    <article
+                      className="movie-item"
+                      key={movie.id}
+                    >
+                      <div className="movie-poster">
+                        {movie.poster_image ? (
+                          <img
+                            src={movie.poster_image}
+                            alt={movie.title}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="movie-poster-placeholder">
+                            <span>{movie.title}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="movie-info">
+                        <h4>{movie.title}</h4>
+
+                        {movie.director && (
+                          <p>{movie.director}</p>
+                        )}
+                      </div>
+                    </article>
+                  ))}
                 </div>
-
-                <div className="book-card-content">
-                  <p className="eyebrow">
-                    {movie.month}/{movie.year}
-                  </p>
-
-                  <h2>{movie.title}</h2>
-
-                  {movie.director && (
-                    <p className="book-author">
-                      Directed by {movie.director}
-                    </p>
-                  )}
-
-                  {movie.description && (
-                    <p>{movie.description}</p>
-                  )}
-                </div>
-              </article>
+              </section>
             ))}
           </div>
         )}
