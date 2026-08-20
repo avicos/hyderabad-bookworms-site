@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import MonthlyFeature from "../components/MonthlyFeature";
@@ -5,7 +7,35 @@ import EventCard from "../components/EventCard";
 import GalleryPreview from "../components/GalleryPreview";
 import Footer from "../components/Footer";
 
+import { supabase } from "../lib/supabase";
+
 function Home() {
+  const [events, setEvents] = useState([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      const today = new Date().toISOString().split("T")[0];
+
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .gte("event_date", today)
+        .order("event_date", { ascending: true })
+        .limit(3);
+
+      if (error) {
+        console.error("Error fetching events:", error);
+      } else {
+        setEvents(data);
+      }
+
+      setEventsLoading(false);
+    }
+
+    fetchEvents();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -21,23 +51,34 @@ function Home() {
             <h2>Upcoming Events</h2>
           </div>
 
-          <div className="events-grid">
-            <EventCard
-              date="14"
-              month="SEP"
-              title="September Book Club Meeting"
-              description="Join us for an evening of discussion, books and good conversation."
-              location="Hyderabad"
-            />
+          {eventsLoading ? (
+            <p>Loading events...</p>
+          ) : events.length === 0 ? (
+            <p>No upcoming events at the moment.</p>
+          ) : (
+            <div className="events-grid">
+              {events.map((event) => {
+                const date = new Date(`${event.event_date}T00:00:00`);
 
-            <EventCard
-              date="28"
-              month="SEP"
-              title="Movie Night"
-              description="A screening followed by a discussion with the group."
-              location="Hyderabad"
-            />
-          </div>
+                return (
+                  <EventCard
+                    key={event.id}
+                    date={date.toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                    })}
+                    month={date
+                      .toLocaleDateString("en-IN", {
+                        month: "short",
+                      })
+                      .toUpperCase()}
+                    title={event.title}
+                    description={event.description}
+                    location={event.location}
+                  />
+                );
+              })}
+            </div>
+          )}
         </section>
 
         <GalleryPreview />
