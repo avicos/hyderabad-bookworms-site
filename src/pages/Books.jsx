@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { supabase } from "../lib/supabase";
+import "./Books.css";
 
 function Books() {
   const [books, setBooks] = useState([]);
@@ -27,54 +28,79 @@ function Books() {
     fetchBooks();
   }, []);
 
+  // Group books by year
+  const groupedBooks = books.reduce((acc, book) => {
+    if (!acc[book.year]) {
+      acc[book.year] = [];
+    }
+
+    acc[book.year].push(book);
+
+    return acc;
+  }, {});
+
+  const years = Object.keys(groupedBooks).sort(
+    (a, b) => Number(b) - Number(a)
+  );
+
   return (
     <>
       <Navbar />
 
-      <main className="page">
-        <p className="eyebrow">OUR READING HISTORY</p>
+      <main className="books-page">
+        <div className="books-header">
+          <p className="eyebrow">OUR READING HISTORY</p>
 
-        <h1>Books</h1>
+          <h1>Books</h1>
 
-        <p className="page-intro">
-          Every Book of the Month we've read together.
-        </p>
+          <p className="books-intro">
+            Every Book of the Month we've read together.
+          </p>
+        </div>
 
         {loading ? (
-          <p>Loading books...</p>
+          <p className="books-loading">Loading books...</p>
+        ) : books.length === 0 ? (
+          <p className="books-empty">
+            No books have been added yet.
+          </p>
         ) : (
-          <div className="book-list">
-            {books.map((book) => (
-              <article className="book-card" key={book.id}>
-                <div className="book-card-image">
-                  {book.cover_image ? (
-                    <img
-                      src={book.cover_image}
-                      alt={book.title}
-                    />
-                  ) : (
-                    <span>BOOK</span>
-                  )}
+          <div className="book-history">
+            {years.map((year) => (
+              <section className="book-year" key={year}>
+                <h2 className="book-year-title">{year}</h2>
+
+                <div className="book-grid">
+                  {groupedBooks[year].map((book) => (
+                    <article
+                      className="book-item"
+                      key={book.id}
+                    >
+                      <div className="book-cover">
+                        {book.cover_image ? (
+                          <img
+                            src={book.cover_image}
+                            alt={book.title}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="book-cover-placeholder">
+                            <span>{book.title}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="book-info">
+                        <h4>{book.title}</h4>
+
+                        {book.author && (
+                          <p>{book.author}</p>
+                        )}
+                      </div>
+                    </article>
+                  ))}
                 </div>
-
-                <div className="book-card-content">
-                  <p className="eyebrow">
-                    {book.month}/{book.year}
-                  </p>
-
-                  <h2>{book.title}</h2>
-
-                  {book.author && (
-                    <p className="book-author">
-                      {book.author}
-                    </p>
-                  )}
-
-                  {book.description && (
-                    <p>{book.description}</p>
-                  )}
-                </div>
-              </article>
+              </section>
             ))}
           </div>
         )}

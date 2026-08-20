@@ -1,0 +1,209 @@
+/* =========================================
+   BOOKS PAGE
+   Letterboxd-style archive
+========================================= */
+
+.books-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 40px 100px;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.books-header {
+  margin-bottom: 55px;
+}
+
+.books-header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+  margin: 10px 0 20px;
+}
+
+.books-intro {
+  color: #666;
+  font-size: 1.05rem;
+  max-width: 600px;
+}
+
+.books-loading,
+.books-empty {
+  color: #666;
+  padding: 40px 0;
+}
+
+/* =========================================
+   YEAR
+========================================= */
+
+.book-year {
+  margin-bottom: 65px;
+}
+
+.book-year-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  margin: 0 0 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+/* =========================================
+   BOOK GRID
+========================================= */
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 18px;
+}
+
+/* =========================================
+   BOOK CARD
+========================================= */
+
+.book-item {
+  min-width: 0;
+}
+
+/* Book covers are slightly taller
+   than movie posters */
+
+.book-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #e9e9e9;
+}
+
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.book-item:hover .book-cover img {
+  transform: scale(1.035);
+  opacity: 0.9;
+}
+
+/* =========================================
+   PLACEHOLDER
+========================================= */
+
+.book-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  text-align: center;
+  background: #e5e5e5;
+}
+
+.book-cover-placeholder span {
+  font-family: "Playfair Display", serif;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   BOOK INFO
+========================================= */
+
+.book-info {
+  padding-top: 7px;
+}
+
+.book-info h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.book-info p {
+  margin: 3px 0 0;
+  font-size: 0.72rem;
+  color: #777;
+  line-height: 1.2;
+}
+
+/* =========================================
+   DESKTOP / TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+  .book-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 16px;
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .books-page {
+    padding: 60px 25px 80px;
+  }
+
+  .book-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+  .books-page {
+    padding: 50px 18px 70px;
+  }
+
+  .books-header {
+    margin-bottom: 40px;
+  }
+
+  .book-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .book-info h4 {
+    font-size: 0.78rem;
+  }
+
+  .book-info p {
+    font-size: 0.68rem;
+  }
+
+  .book-year {
+    margin-bottom: 45px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 420px) {
+  .book-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
