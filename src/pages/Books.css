@@ -41,14 +41,16 @@
 ========================================= */
 
 .book-year {
-  margin-bottom: 65px;
+  margin: 0;
+  padding: 0 0 30px;
 }
 
 .book-year-title {
   font-family: "Playfair Display", serif;
   font-size: 2rem;
-  margin: 0 0 12px;
-  padding-bottom: 14px;
+  line-height: 1.1;
+  margin: 0 0 10px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #d9d9d9;
 }
 
@@ -192,9 +194,6 @@
     font-size: 0.68rem;
   }
 
-  .book-year {
-    margin-bottom: 45px;
-  }
 }
 
 /* =========================================
