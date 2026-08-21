@@ -1,0 +1,148 @@
+/* =========================================
+   ABOUT PAGE
+========================================= */
+
+.about-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 90px 40px 110px;
+}
+
+.about-header {
+  max-width: 850px;
+  margin-bottom: 90px;
+}
+
+.about-header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 1;
+  margin: 10px 0 25px;
+}
+
+.about-intro {
+  max-width: 700px;
+  color: #666;
+  font-size: 1.3rem;
+  line-height: 1.6;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 90px;
+}
+
+.about-section h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2.3rem;
+  line-height: 1.15;
+  margin: 10px 0 25px;
+}
+
+.about-section > p:not(.eyebrow) {
+  color: #666;
+  line-height: 1.75;
+  margin-bottom: 18px;
+}
+
+.about-list {
+  border-top: 1px solid #d9d9d9;
+}
+
+.about-list > div {
+  padding: 22px 0;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.about-list span {
+  color: #0057b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.about-list h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.35rem;
+  margin: 7px 0 6px;
+}
+
+.about-list p {
+  color: #666;
+  line-height: 1.55;
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .about-page {
+    padding: 65px 25px 80px;
+  }
+
+  .about-header {
+    margin-bottom: 60px;
+  }
+
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-page {
+    padding: 50px 18px 70px;
+  }
+
+  .about-header h1 {
+    font-size: 3.2rem;
+  }
+
+  .about-intro {
+    font-size: 1.1rem;
+  }
+
+  .about-section h2 {
+    font-size: 2rem;
+  }
+}
+.connect-section {
+  margin-top: 100px;
+  padding-top: 55px;
+  border-top: 1px solid #d9d9d9;
+  max-width: 650px;
+}
+
+.connect-section h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2.5rem;
+  line-height: 1.15;
+  margin: 10px 0 15px;
+}
+
+.connect-section > p:not(.eyebrow) {
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.instagram-link {
+  color: #0057b8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.instagram-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .connect-section {
+    margin-top: 70px;
+    padding-top: 40px;
+  }
+
+  .connect-section h2 {
+    font-size: 2rem;
+  }
+}
