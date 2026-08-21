@@ -1,0 +1,65 @@
+.gallery-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 40px 100px;
+}
+
+.gallery-page-header {
+  margin-bottom: 50px;
+}
+
+.gallery-page-header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+  margin: 10px 0 20px;
+}
+
+.gallery-full-grid {
+  columns: 4 220px;
+  column-gap: 18px;
+}
+
+.gallery-full-photo {
+  break-inside: avoid;
+  margin-bottom: 18px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #e5e5e5;
+}
+
+.gallery-full-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.gallery-full-photo:hover img {
+  transform: scale(1.02);
+}
+
+@media (max-width: 900px) {
+  .gallery-page {
+    padding: 60px 25px 80px;
+  }
+
+  .gallery-full-grid {
+    columns: 3 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery-page {
+    padding: 50px 18px 70px;
+  }
+
+  .gallery-full-grid {
+    columns: 2 140px;
+    column-gap: 12px;
+  }
+
+  .gallery-full-photo {
+    margin-bottom: 12px;
+  }
+}

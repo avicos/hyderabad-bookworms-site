@@ -12,6 +12,9 @@ import { supabase } from "../lib/supabase";
 function Home() {
   const [events, setEvents] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(true);
+  const [email, setEmail] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribeMessage, setSubscribeMessage] = useState("");
 
   useEffect(() => {
     async function fetchEvents() {
@@ -35,6 +38,37 @@ function Home() {
 
     fetchEvents();
   }, []);
+  async function handleSubscribe(event) {
+    event.preventDefault();
+
+    if (!email.trim()) {
+      setSubscribeMessage("Please enter your email address.");
+      return;
+    }
+
+    setSubscribing(true);
+    setSubscribeMessage("");
+
+    const { error } = await supabase.from("subscribers").insert([
+      {
+        email: email.trim().toLowerCase(),
+      },
+    ]);
+
+    if (error) {
+      if (error.code === "23505") {
+        setSubscribeMessage("You're already subscribed!");
+      } else {
+        console.error("Subscription error:", error);
+        setSubscribeMessage("Something went wrong. Please try again.");
+      }
+    } else {
+      setSubscribeMessage("You're subscribed! 🎉");
+      setEmail("");
+    }
+
+    setSubscribing(false);
+  }
 
   return (
     <>
@@ -90,15 +124,25 @@ function Home() {
             Join the Hyderabad Bookworms mailing list and we'll let you know
             when something new is happening.
           </p>
-
-          <form className="subscribe-form">
+          <form className="subscribe-form" onSubmit={handleSubscribe}>
             <input
               type="email"
               placeholder="your@email.com"
               aria-label="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={subscribing}
+              required
             />
-            <button type="submit">Subscribe</button>
+
+            <button type="submit" disabled={subscribing}>
+              {subscribing ? "Subscribing..." : "Subscribe"}
+            </button>
           </form>
+
+          {subscribeMessage && (
+            <p className="subscribe-message">{subscribeMessage}</p>
+          )}
         </section>
       </main>
 
