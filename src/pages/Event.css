@@ -1,9 +1,10 @@
 /* =========================================
-   EVENT DETAIL PAGE
+   EVENT PAGE
 ========================================= */
 
 .event-page {
-  padding-top: 60px;
+  padding-top: 55px;
+  padding-bottom: 100px;
 }
 
 /* =========================================
@@ -17,7 +18,7 @@
 
   color: #666;
 
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
 
   text-decoration: none;
@@ -32,29 +33,17 @@
 ========================================= */
 
 .event-detail {
-  max-width: 1000px;
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 280px;
+
+  gap: 55px;
+
+  max-width: 900px;
+
   margin: 0 auto;
-}
 
-.event-detail-image {
-  width: 100%;
-  max-height: 560px;
-
-  overflow: hidden;
-  border-radius: 6px;
-
-  margin-bottom: 50px;
-
-  background: #e5e5e5;
-}
-
-.event-detail-image img {
-  width: 100%;
-  height: auto;
-  max-height: 560px;
-
-  object-fit: cover;
-  display: block;
+  align-items: start;
 }
 
 /* =========================================
@@ -62,42 +51,93 @@
 ========================================= */
 
 .event-detail-content {
-  max-width: 760px;
-  margin: 0 auto;
+  min-width: 0;
+  padding-top: 5px;
 }
+
+.event-detail-content .eyebrow {
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   EVENT TITLE
+========================================= */
 
 .event-detail-content h1 {
   font-family: "Playfair Display", serif;
 
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  line-height: 1.05;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
 
-  margin: 10px 0 30px;
+  line-height: 0.98;
+
+  letter-spacing: -0.02em;
+
+  margin: 0 0 25px;
+
+  overflow-wrap: break-word;
 }
+
+/* =========================================
+   EVENT META
+========================================= */
 
 .event-detail-meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 25px;
+
+  flex-direction: column;
+
+  gap: 7px;
 
   margin-bottom: 30px;
 
   color: #555;
+
+  font-size: 0.95rem;
 }
 
 .event-detail-meta p {
   margin: 0;
 }
 
+/* =========================================
+   EVENT DESCRIPTION
+========================================= */
+
 .event-detail-description {
-  max-width: 680px;
+  max-width: 650px;
+
+  margin: 0 0 35px;
 
   color: #555;
 
   font-size: 1.05rem;
-  line-height: 1.7;
 
-  margin-bottom: 35px;
+  line-height: 1.75;
+}
+
+/* =========================================
+   EVENT IMAGE / POSTER
+========================================= */
+
+.event-detail-image {
+  width: 280px;
+
+  overflow: hidden;
+
+  border-radius: 5px;
+
+  background: #e5e5e5;
+
+  order: 2;
+}
+
+.event-detail-image img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
 }
 
 /* =========================================
@@ -106,17 +146,31 @@
 
 .event-detail-actions {
   display: flex;
+
   gap: 10px;
+
+  margin-top: 10px;
 }
 
 .event-detail-rsvp,
 .event-detail-calendar {
-  padding: 12px 20px;
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+
+  padding: 0 20px;
+
+  box-sizing: border-box;
 
   border-radius: 4px;
 
   font: inherit;
+
   font-size: 0.9rem;
+
   font-weight: 600;
 
   cursor: pointer;
@@ -126,6 +180,7 @@
   border: 1px solid #111;
 
   background: #111;
+
   color: white;
 }
 
@@ -137,6 +192,7 @@
   border: 1px solid #ccc;
 
   background: white;
+
   color: #111;
 }
 
@@ -150,11 +206,13 @@
 
 .rsvp-overlay {
   position: fixed;
+
   inset: 0;
 
   z-index: 1000;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -171,20 +229,26 @@
   position: relative;
 
   width: 100%;
+
   max-width: 460px;
 
   padding: 40px;
 
+  box-sizing: border-box;
+
   background: #fff;
+
   border-radius: 6px;
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.2);
 }
 
 .rsvp-modal h2 {
   font-family: "Playfair Display", serif;
 
   font-size: 2rem;
+
   line-height: 1.1;
 
   margin: 8px 0;
@@ -203,9 +267,11 @@
   right: 18px;
 
   border: 0;
+
   background: transparent;
 
   font-size: 1.8rem;
+
   line-height: 1;
 
   cursor: pointer;
@@ -221,27 +287,33 @@
 
 .rsvp-modal form {
   display: flex;
+
   flex-direction: column;
+
   gap: 17px;
 }
 
 .rsvp-modal label {
   display: flex;
+
   flex-direction: column;
 
   gap: 7px;
 
   font-size: 0.85rem;
+
   font-weight: 600;
 }
 
 .rsvp-modal input {
   width: 100%;
+
   box-sizing: border-box;
 
   padding: 12px;
 
   border: 1px solid #ccc;
+
   border-radius: 4px;
 
   font: inherit;
@@ -249,6 +321,7 @@
 
 .rsvp-modal input:focus {
   outline: none;
+
   border-color: #111;
 }
 
@@ -256,12 +329,15 @@
   padding: 13px;
 
   border: 0;
+
   border-radius: 4px;
 
   background: #111;
+
   color: white;
 
   font: inherit;
+
   font-weight: 600;
 
   cursor: pointer;
@@ -273,6 +349,7 @@
 
 .rsvp-modal form button[type="submit"]:disabled {
   opacity: 0.5;
+
   cursor: not-allowed;
 }
 
@@ -286,9 +363,11 @@
   padding: 12px;
 
   background: #f3f3ef;
+
   border-radius: 4px;
 
   font-size: 0.85rem;
+
   line-height: 1.5;
 }
 
@@ -322,12 +401,15 @@
   padding: 12px 16px;
 
   border: 1px solid #111;
+
   border-radius: 4px;
 
   background: #111;
+
   color: white;
 
   font: inherit;
+
   font-weight: 600;
 
   cursor: pointer;
@@ -345,14 +427,17 @@
   width: 100%;
 
   margin-top: 12px;
+
   padding: 11px;
 
   border: 0;
+
   background: transparent;
 
   color: #666;
 
   font: inherit;
+
   font-weight: 600;
 
   cursor: pointer;
@@ -363,39 +448,179 @@
 }
 
 /* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+  .event-detail {
+    grid-template-columns: minmax(0, 1fr) 230px;
+
+    gap: 35px;
+  }
+
+  .event-detail-image {
+    width: 230px;
+  }
+
+  .event-detail-content h1 {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+  }
+}
+
+/* =========================================
    MOBILE
 ========================================= */
 
 @media (max-width: 600px) {
   .event-page {
-    padding-top: 40px;
+    padding-top: 35px;
+
+    padding-bottom: 70px;
   }
 
   .event-back {
     margin-bottom: 30px;
   }
 
-  .event-detail-image {
-    margin-bottom: 35px;
+  /*
+     TOP SECTION
+     
+     Title/details occupy the left.
+     Poster occupies the right.
+  */
+
+  .event-detail {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) 105px;
+
+    gap: 18px;
+
+    width: 100%;
+
+    max-width: none;
+
+    margin: 0;
+  }
+
+  .event-detail-content {
+    min-width: 0;
+
+    padding: 0;
+
+    overflow: hidden;
+  }
+
+  .event-detail-content .eyebrow {
+    font-size: 0.7rem;
+
+    letter-spacing: 0.1em;
+
+    margin-bottom: 10px;
   }
 
   .event-detail-content h1 {
-    font-size: 2.6rem;
+    max-width: 100%;
+
+    font-size: 2rem;
+
+    line-height: 0.98;
+
+    letter-spacing: -0.02em;
+
+    margin: 0 0 20px;
+
+    overflow-wrap: break-word;
   }
 
   .event-detail-meta {
+    display: flex;
+
     flex-direction: column;
-    gap: 8px;
+
+    gap: 5px;
+
+    margin-bottom: 0;
+
+    font-size: 0.8rem;
+  }
+
+  /* =====================================
+     POSTER
+  ===================================== */
+
+  .event-detail-image {
+    width: 105px;
+
+    order: 2;
+
+    align-self: start;
+
+    border-radius: 4px;
+  }
+
+  .event-detail-image img {
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+  }
+
+  /*
+     IMPORTANT:
+     
+     Make the description and buttons escape
+     the two-column layout by positioning them
+     relative to the page width.
+  */
+
+  .event-detail-description {
+    grid-column: 1 / -1;
+
+    width: 100%;
+
+    max-width: none;
+
+    margin: 32px 0 25px;
+
+    color: #555;
+
+    font-size: 0.95rem;
+
+    line-height: 1.7;
   }
 
   .event-detail-actions {
+    grid-column: 1 / -1;
+
+    display: flex;
+
     flex-direction: column;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
   }
 
   .event-detail-rsvp,
   .event-detail-calendar {
     width: 100%;
+
+    min-height: 46px;
+
+    box-sizing: border-box;
   }
+
+  /* =====================================
+     RSVP MODAL
+  ===================================== */
 
   .rsvp-modal {
     padding: 30px 22px;
@@ -403,5 +628,29 @@
 
   .rsvp-modal h2 {
     font-size: 1.7rem;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 380px) {
+  .event-detail {
+    grid-template-columns: minmax(0, 1fr) 95px;
+
+    gap: 15px;
+  }
+
+  .event-detail-image {
+    width: 95px;
+  }
+
+  .event-detail-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .event-detail-meta {
+    font-size: 0.76rem;
   }
 }

@@ -130,21 +130,15 @@ function AdminEvents() {
 
     if (!filePath) return;
 
-    const { error } = await supabase.storage
-      .from("events")
-      .remove([filePath]);
+    const { error } = await supabase.storage.from("events").remove([filePath]);
 
     if (error) {
-      console.error(
-        "Could not delete event image:",
-        error
-      );
+      console.error("Could not delete event image:", error);
     }
   }
 
   async function uploadImage(file, slug) {
-    const extension =
-      file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
 
     const filePath = `${slug}-${Date.now()}.${extension}`;
 
@@ -161,9 +155,7 @@ function AdminEvents() {
 
     const {
       data: { publicUrl },
-    } = supabase.storage
-      .from("events")
-      .getPublicUrl(filePath);
+    } = supabase.storage.from("events").getPublicUrl(filePath);
 
     return publicUrl;
   }
@@ -179,10 +171,7 @@ function AdminEvents() {
     setSaving(true);
 
     try {
-      const slug = createSlug(
-        form.title,
-        form.event_date
-      );
+      const slug = createSlug(form.title, form.event_date);
 
       let imageUrl = form.image;
 
@@ -190,10 +179,7 @@ function AdminEvents() {
        * Upload a new image if one was selected.
        */
       if (selectedImage) {
-        imageUrl = await uploadImage(
-          selectedImage,
-          slug
-        );
+        imageUrl = await uploadImage(selectedImage, slug);
       }
 
       const eventData = {
@@ -222,14 +208,10 @@ function AdminEvents() {
           editingEvent.image &&
           editingEvent.image !== imageUrl
         ) {
-          await deleteStorageImage(
-            editingEvent.image
-          );
+          await deleteStorageImage(editingEvent.image);
         }
       } else {
-        const { error } = await supabase
-          .from("events")
-          .insert([eventData]);
+        const { error } = await supabase.from("events").insert([eventData]);
 
         if (error) {
           /*
@@ -250,13 +232,9 @@ function AdminEvents() {
       console.error(error);
 
       if (error.code === "23505") {
-        alert(
-          "An event with this title and date already exists."
-        );
+        alert("An event with this title and date already exists.");
       } else {
-        alert(
-          "Could not save event. Please try again."
-        );
+        alert("Could not save event. Please try again.");
       }
     }
 
@@ -264,22 +242,13 @@ function AdminEvents() {
   }
 
   async function handleDelete(id) {
-    const eventToDelete = events.find(
-      (event) => event.id === id
-    );
+    const eventToDelete = events.find((event) => event.id === id);
 
-    if (
-      !window.confirm(
-        "Are you sure you want to delete this event?"
-      )
-    ) {
+    if (!window.confirm("Are you sure you want to delete this event?")) {
       return;
     }
 
-    const { error } = await supabase
-      .from("events")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("events").delete().eq("id", id);
 
     if (error) {
       console.error(error);
@@ -288,9 +257,7 @@ function AdminEvents() {
     }
 
     if (eventToDelete?.image) {
-      await deleteStorageImage(
-        eventToDelete.image
-      );
+      await deleteStorageImage(eventToDelete.image);
     }
 
     await fetchEvents();
@@ -300,36 +267,22 @@ function AdminEvents() {
     <main className="admin-manager">
       <header className="admin-manager-header">
         <div>
-          <p className="eyebrow">
-            ADMIN / EVENTS
-          </p>
+          <p className="eyebrow">ADMIN / EVENTS</p>
 
           <h1>Events</h1>
 
-          <p>
-            Manage upcoming and past events.
-          </p>
+          <p>Manage upcoming and past events.</p>
         </div>
 
-        <Link
-          to="/admin"
-          className="admin-back"
-        >
+        <Link to="/admin" className="admin-back">
           ← Dashboard
         </Link>
       </header>
 
       <section className="admin-form-card">
-        <h2>
-          {editingEvent
-            ? "Edit Event"
-            : "Add Event"}
-        </h2>
+        <h2>{editingEvent ? "Edit Event" : "Add Event"}</h2>
 
-        <form
-          className="admin-form"
-          onSubmit={handleSubmit}
-        >
+        <form className="admin-form" onSubmit={handleSubmit}>
           <div className="admin-field">
             <label>Title</label>
 
@@ -377,26 +330,14 @@ function AdminEvents() {
           <div className="admin-field">
             <label>Type</label>
 
-            <select
-              name="type"
-              value={form.type}
-              onChange={handleChange}
-            >
-              <option value="book">
-                Book
-              </option>
+            <select name="type" value={form.type} onChange={handleChange}>
+              <option value="book">Book</option>
 
-              <option value="movie">
-                Movie
-              </option>
+              <option value="movie">Movie</option>
 
-              <option value="social">
-                Social
-              </option>
+              <option value="social">Social</option>
 
-              <option value="other">
-                Other
-              </option>
+              <option value="other">Other</option>
             </select>
           </div>
 
@@ -413,28 +354,29 @@ function AdminEvents() {
           <div className="admin-field full-width">
             <label>Event Image</label>
 
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              onChange={handleImageChange}
-            />
+            <label className="admin-image-upload">
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleImageChange}
+              />
+
+              <span className="admin-image-upload-icon">↑</span>
+
+              <span className="admin-image-upload-title">
+                {selectedImage
+                  ? "Change image"
+                  : imagePreview
+                    ? "Replace image"
+                    : "Choose event image"}
+              </span>
+
+              <span className="admin-image-upload-help">PNG, JPG or WebP</span>
+            </label>
 
             {imagePreview && (
-              <div
-                style={{
-                  marginTop: "15px",
-                  maxWidth: "400px",
-                }}
-              >
-                <img
-                  src={imagePreview}
-                  alt="Event preview"
-                  style={{
-                    width: "100%",
-                    display: "block",
-                    borderRadius: "4px",
-                  }}
-                />
+              <div className="admin-image-preview">
+                <img src={imagePreview} alt="Event preview" />
               </div>
             )}
           </div>
@@ -469,87 +411,61 @@ function AdminEvents() {
         <div className="admin-list-header">
           <h2>Existing Events</h2>
 
-          <span className="admin-list-count">
-            {events.length} events
-          </span>
+          <span className="admin-list-count">{events.length} events</span>
         </div>
 
         {loading ? (
-          <div className="admin-status">
-            Loading events...
-          </div>
+          <div className="admin-status">Loading events...</div>
         ) : events.length === 0 ? (
-          <div className="admin-status">
-            No events yet.
-          </div>
+          <div className="admin-status">No events yet.</div>
         ) : (
           events.map((event) => (
-            <article
-              className="admin-item"
-              key={event.id}
-            >
+            <article className="admin-item" key={event.id}>
               <div className="admin-item-main">
                 <h3>{event.title}</h3>
 
                 <p>
-                  {new Date(
-                    `${event.event_date}T00:00:00`
-                  ).toLocaleDateString(
+                  {new Date(`${event.event_date}T00:00:00`).toLocaleDateString(
                     "en-IN",
                     {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
-                    }
+                    },
                   )}
                 </p>
 
                 {event.event_time && (
                   <p>
                     {new Date(
-                      `1970-01-01T${event.event_time}`
-                    ).toLocaleTimeString(
-                      "en-IN",
-                      {
-                        hour: "numeric",
-                        minute: "2-digit",
-                      }
-                    )}
+                      `1970-01-01T${event.event_time}`,
+                    ).toLocaleTimeString("en-IN", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
                   </p>
                 )}
 
-                {event.location && (
-                  <p>{event.location}</p>
-                )}
+                {event.location && <p>{event.location}</p>}
 
-                {event.type && (
-                  <p className="admin-item-meta">
-                    {event.type}
-                  </p>
-                )}
+                {event.type && <p className="admin-item-meta">{event.type}</p>}
 
                 {event.slug && (
-                  <p className="admin-item-meta">
-                    /events/{event.slug}
-                  </p>
+                  <p className="admin-item-meta">/events/{event.slug}</p>
                 )}
               </div>
 
               <div className="admin-item-actions">
                 <button
                   className="admin-edit-button"
-                  onClick={() =>
-                    startEditing(event)
-                  }
+                  onClick={() => startEditing(event)}
                 >
                   Edit
                 </button>
 
                 <button
                   className="admin-delete-button"
-                  onClick={() =>
-                    handleDelete(event.id)
-                  }
+                  onClick={() => handleDelete(event.id)}
                 >
                   Delete
                 </button>

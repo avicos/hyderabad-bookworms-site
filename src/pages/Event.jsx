@@ -222,66 +222,66 @@ function Event() {
           ← All Events
         </Link>
 
-        <article className="event-detail">
-          {event.image && (
-            <div className="event-detail-image">
-              <img
-                src={event.image}
-                alt={event.title}
-              />
-            </div>
-          )}
+       <article className="event-detail">
+  <div className="event-detail-content">
+    <p className="eyebrow">
+      {event.type || "EVENT"}
+    </p>
 
-          <div className="event-detail-content">
-            <p className="eyebrow">
-              {event.type || "EVENT"}
-            </p>
+    <h1>{event.title}</h1>
 
-            <h1>{event.title}</h1>
+    <div className="event-detail-meta">
+      <p>
+        📅 {formatEventDate(event.event_date)}
+      </p>
 
-            <div className="event-detail-meta">
-              <p>
-                📅 {formatEventDate(event.event_date)}
-              </p>
+      {event.event_time && (
+        <p>
+          🕐 {formatEventTime(event.event_time)}
+        </p>
+      )}
 
-              {event.event_time && (
-                <p>
-                  🕐 {formatEventTime(event.event_time)}
-                </p>
-              )}
+      {event.location && (
+        <p>
+          📍 {event.location}
+        </p>
+      )}
+    </div>
+  </div>
 
-              {event.location && (
-                <p>
-                  📍 {event.location}
-                </p>
-              )}
-            </div>
+  {event.image && (
+    <div className="event-detail-image">
+      <img
+        src={event.image}
+        alt={event.title}
+      />
+    </div>
+  )}
 
-            {event.description && (
-              <p className="event-detail-description">
-                {event.description}
-              </p>
-            )}
+  {event.description && (
+    <p className="event-detail-description">
+      {event.description}
+    </p>
+  )}
 
-            <div className="event-detail-actions">
-              <button
-                className="event-detail-rsvp"
-                onClick={openRsvp}
-              >
-                RSVP
-              </button>
+  <div className="event-detail-actions">
+    <button
+      className="event-detail-rsvp"
+      onClick={openRsvp}
+    >
+      RSVP
+    </button>
 
-              <button
-                className="event-detail-calendar"
-                onClick={() =>
-                  addToGoogleCalendar(event)
-                }
-              >
-                Add to Calendar
-              </button>
-            </div>
-          </div>
-        </article>
+    <button
+      className="event-detail-calendar"
+      onClick={() =>
+        addToGoogleCalendar(event)
+      }
+    >
+      Add to Calendar
+    </button>
+  </div>
+</article>
       </main>
 
       {showRsvp && (
