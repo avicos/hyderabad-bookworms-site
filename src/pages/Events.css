@@ -383,6 +383,35 @@
    TABLET
 ========================================= */
 
+/* =========================================
+   EVENT LINKS
+========================================= */
+
+.event-card-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.event-card-title-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.event-card-image-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.event-card-image-link:hover .event-card-image img {
+  transform: scale(1.02);
+}
+
+.event-card-image img {
+  transition: transform 0.25s ease;
+}
+
 @media (max-width: 800px) {
   .page {
     padding: 60px 25px 80px;
@@ -440,3 +469,4 @@
     width: 100%;
   }
 }
+

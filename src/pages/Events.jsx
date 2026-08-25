@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { supabase } from "../lib/supabase";
@@ -219,7 +220,14 @@ function Events() {
                 <div className="event-card-content">
                   <p className="eyebrow">{formatEventDate(event.event_date)}</p>
 
-                  <h2>{event.title}</h2>
+                  <h2>
+                    <Link
+                      to={`/events/${event.slug}`}
+                      className="event-card-title-link"
+                    >
+                      {event.title}
+                    </Link>
+                  </h2>
 
                   {event.location && (
                     <p className="event-location">📍 {event.location}</p>
@@ -255,9 +263,14 @@ function Events() {
                 </div>
 
                 {event.image && (
-                  <div className="event-card-image">
-                    <img src={event.image} alt={event.title} />
-                  </div>
+                  <Link
+                    to={`/events/${event.slug}`}
+                    className="event-card-image-link"
+                  >
+                    <div className="event-card-image">
+                      <img src={event.image} alt={event.title} />
+                    </div>
+                  </Link>
                 )}
               </article>
             ))}
