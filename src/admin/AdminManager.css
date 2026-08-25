@@ -1,0 +1,462 @@
+/* =========================================
+   ADMIN MANAGER
+========================================= */
+
+.admin-manager {
+  min-height: 100vh;
+  background: #f5f5f2;
+  padding: 50px;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.admin-manager-header {
+  max-width: 1200px;
+  margin: 0 auto 35px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+}
+
+.admin-manager-header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  margin: 8px 0 10px;
+}
+
+.admin-manager-header p:not(.eyebrow) {
+  color: #666;
+  margin: 0;
+}
+
+.admin-back {
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.admin-back:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   FORM CARD
+========================================= */
+
+.admin-form-card {
+  max-width: 1200px;
+  margin: 0 auto 45px;
+
+  background: white;
+  border: 1px solid #deded9;
+  border-radius: 6px;
+  padding: 30px;
+}
+
+.admin-form-card h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  margin: 0 0 25px;
+}
+
+/* =========================================
+   FORM
+========================================= */
+
+.admin-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 25px;
+}
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.admin-field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.admin-field input,
+.admin-field textarea,
+.admin-field select {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  background: white;
+  font: inherit;
+}
+
+.admin-field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.admin-field input:focus,
+.admin-field textarea:focus,
+.admin-field select:focus {
+  outline: none;
+  border-color: #111;
+}
+
+/* =========================================
+   FORM ACTIONS
+========================================= */
+
+.admin-form-actions {
+  grid-column: 1 / -1;
+
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.admin-primary-button,
+.admin-secondary-button,
+.admin-danger-button {
+  padding: 11px 18px;
+
+  border-radius: 4px;
+
+  font: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.admin-primary-button {
+  border: 1px solid #111;
+  background: #111;
+  color: white;
+}
+
+.admin-primary-button:hover {
+  opacity: 0.85;
+}
+
+.admin-secondary-button {
+  border: 1px solid #ccc;
+  background: white;
+  color: #111;
+}
+
+.admin-secondary-button:hover {
+  background: #f5f5f2;
+}
+
+.admin-danger-button {
+  border: 1px solid #d0a0a0;
+  background: white;
+  color: #a22;
+}
+
+.admin-danger-button:hover {
+  background: #faf0f0;
+}
+
+.admin-primary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   LIST
+========================================= */
+
+.admin-list {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-list-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.admin-list-header h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.admin-list-count {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+/* =========================================
+   LIST ITEM
+========================================= */
+
+.admin-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  gap: 20px;
+  align-items: center;
+
+  padding: 20px 22px;
+
+  margin-bottom: 10px;
+
+  background: white;
+  border: 1px solid #deded9;
+  border-radius: 5px;
+}
+
+.admin-item-main h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.25rem;
+  margin: 0 0 5px;
+}
+
+.admin-item-main p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 3px 0;
+}
+
+.admin-item-meta {
+  color: #888;
+  font-size: 0.78rem;
+}
+
+/* =========================================
+   ITEM ACTIONS
+========================================= */
+
+.admin-item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-item-actions button {
+  padding: 8px 12px;
+
+  border-radius: 4px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.admin-edit-button {
+  border: 1px solid #ccc;
+  background: white;
+}
+
+.admin-edit-button:hover {
+  background: #f5f5f2;
+}
+
+.admin-delete-button {
+  border: 1px solid #d0a0a0;
+  background: white;
+  color: #a22;
+}
+
+.admin-delete-button:hover {
+  background: #faf0f0;
+}
+
+/* =========================================
+   STATUS
+========================================= */
+
+.admin-status {
+  max-width: 1200px;
+  margin: 20px auto;
+
+  padding: 12px 15px;
+
+  border-radius: 4px;
+
+  background: #eee;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+/* =========================================
+   GALLERY UPLOAD
+========================================= */
+
+.gallery-upload-card {
+  padding-bottom: 28px;
+}
+
+.gallery-upload-description {
+  color: #666;
+  max-width: 600px;
+  line-height: 1.6;
+  margin: -10px 0 22px;
+}
+
+.gallery-upload-status {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 15px 0 0;
+}
+
+.admin-upload-button {
+  display: inline-block;
+
+  padding: 12px 18px;
+
+  border-radius: 4px;
+
+  background: #111;
+  color: white;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.admin-upload-button:hover {
+  opacity: 0.85;
+}
+
+/* =========================================
+   GALLERY GRID
+========================================= */
+
+.admin-gallery-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+}
+
+.admin-gallery-item {
+  min-width: 0;
+
+  background: white;
+  border: 1px solid #deded9;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.admin-gallery-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* =========================================
+   GALLERY ITEM FOOTER
+========================================= */
+
+.admin-gallery-item-footer {
+  padding: 10px;
+}
+
+.admin-gallery-item-footer p {
+  margin: 0 0 9px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 0.72rem;
+  color: #777;
+}
+
+.admin-gallery-item-footer button {
+  width: 100%;
+  padding: 8px;
+
+  border: 1px solid #d0a0a0;
+  border-radius: 4px;
+
+  background: white;
+  color: #a22;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.admin-gallery-item-footer button:hover {
+  background: #faf0f0;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 800px) {
+  .admin-manager {
+    padding: 35px 20px;
+  }
+
+  .admin-manager-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .admin-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-field.full-width,
+  .admin-form-actions {
+    grid-column: auto;
+  }
+
+  .admin-item {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-item-actions {
+    justify-content: flex-start;
+  }
+
+  .admin-gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .admin-manager {
+    padding: 25px 15px;
+  }
+
+  .admin-form-card {
+    padding: 20px;
+  }
+
+  .admin-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .admin-form-actions {
+    flex-direction: column;
+  }
+}

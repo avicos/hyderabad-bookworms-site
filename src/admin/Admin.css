@@ -1,0 +1,240 @@
+/* =========================================
+   ADMIN
+========================================= */
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f5f5f2;
+  padding: 50px;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.admin-header {
+  max-width: 1200px;
+  margin: 0 auto 45px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.admin-header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  margin: 8px 0 12px;
+}
+
+.admin-header p:not(.eyebrow) {
+  color: #666;
+  margin: 0;
+}
+
+.admin-header button {
+  border: 1px solid #222;
+  background: transparent;
+  padding: 10px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-header button:hover {
+  background: #222;
+  color: white;
+}
+
+/* =========================================
+   ADMIN OPTIONS
+========================================= */
+
+.admin-options {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.admin-options a {
+  min-height: 180px;
+  padding: 28px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  background: white;
+  border: 1px solid #deded9;
+  border-radius: 6px;
+
+  color: #111;
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.admin-options a:hover {
+  transform: translateY(-3px);
+  border-color: #999;
+}
+
+.admin-options span {
+  font-size: 2rem;
+  margin-bottom: auto;
+}
+
+.admin-options strong {
+  font-family: "Playfair Display", serif;
+  font-size: 1.7rem;
+}
+
+.admin-options small {
+  color: #777;
+  margin-top: 5px;
+}
+
+/* =========================================
+   LOGIN
+========================================= */
+
+.admin-login {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+  background: #f5f5f2;
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 430px;
+
+  padding: 40px;
+
+  background: white;
+  border: 1px solid #deded9;
+  border-radius: 6px;
+}
+
+.admin-login-card h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 3rem;
+  margin: 8px 0 10px;
+}
+
+.admin-login-card > p:not(.eyebrow) {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* =========================================
+   FORM
+========================================= */
+
+.admin-login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.admin-login-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-login-card input {
+  padding: 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  font: inherit;
+}
+
+.admin-login-card input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.admin-login-card button {
+  margin-top: 5px;
+
+  padding: 13px;
+
+  border: none;
+  border-radius: 4px;
+
+  background: #111;
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-login-card button:hover {
+  opacity: 0.85;
+}
+
+.admin-login-card button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-error {
+  color: #b42318;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+  .admin-dashboard {
+    padding: 30px 18px;
+  }
+
+  .admin-header {
+    margin-bottom: 30px;
+
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .admin-header button {
+    align-self: flex-start;
+  }
+
+  .admin-options {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-options a {
+    min-height: 140px;
+  }
+}
+
+@media (max-width: 500px) {
+  .admin-login {
+    padding: 18px;
+  }
+
+  .admin-login-card {
+    padding: 28px 22px;
+  }
+}
