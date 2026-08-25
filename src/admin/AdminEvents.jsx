@@ -13,6 +13,7 @@ function AdminEvents() {
     title: "",
     description: "",
     event_date: "",
+    event_time: "",
     location: "",
     type: "other",
     image: "",
@@ -49,6 +50,7 @@ function AdminEvents() {
       title: "",
       description: "",
       event_date: "",
+      event_time: "",
       location: "",
       type: "other",
       image: "",
@@ -64,12 +66,16 @@ function AdminEvents() {
       title: event.title || "",
       description: event.description || "",
       event_date: event.event_date || "",
+      event_time: event.event_time || "",
       location: event.location || "",
       type: event.type || "other",
       image: event.image || "",
     });
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   async function handleSubmit(event) {
@@ -90,9 +96,7 @@ function AdminEvents() {
         await fetchEvents();
       }
     } else {
-      const { error } = await supabase
-        .from("events")
-        .insert([form]);
+      const { error } = await supabase.from("events").insert([form]);
 
       if (error) {
         console.error(error);
@@ -111,10 +115,7 @@ function AdminEvents() {
       return;
     }
 
-    const { error } = await supabase
-      .from("events")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("events").delete().eq("id", id);
 
     if (error) {
       console.error(error);
@@ -139,9 +140,7 @@ function AdminEvents() {
       </header>
 
       <section className="admin-form-card">
-        <h2>
-          {editingEvent ? "Edit Event" : "Add Event"}
-        </h2>
+        <h2>{editingEvent ? "Edit Event" : "Add Event"}</h2>
 
         <form className="admin-form" onSubmit={handleSubmit}>
           <div className="admin-field">
@@ -164,6 +163,16 @@ function AdminEvents() {
               required
             />
           </div>
+          <div className="admin-field">
+            <label>Time</label>
+
+            <input
+              type="time"
+              name="event_time"
+              value={form.event_time}
+              onChange={handleChange}
+            />
+          </div>
 
           <div className="admin-field">
             <label>Location</label>
@@ -176,11 +185,7 @@ function AdminEvents() {
 
           <div className="admin-field">
             <label>Type</label>
-            <select
-              name="type"
-              value={form.type}
-              onChange={handleChange}
-            >
+            <select name="type" value={form.type} onChange={handleChange}>
               <option value="book">Book</option>
               <option value="movie">Movie</option>
               <option value="social">Social</option>
@@ -216,8 +221,8 @@ function AdminEvents() {
               {saving
                 ? "Saving..."
                 : editingEvent
-                ? "Update Event"
-                : "Add Event"}
+                  ? "Update Event"
+                  : "Add Event"}
             </button>
 
             {editingEvent && (
@@ -236,19 +241,13 @@ function AdminEvents() {
       <section className="admin-list">
         <div className="admin-list-header">
           <h2>Existing Events</h2>
-          <span className="admin-list-count">
-            {events.length} events
-          </span>
+          <span className="admin-list-count">{events.length} events</span>
         </div>
 
         {loading ? (
-          <div className="admin-status">
-            Loading events...
-          </div>
+          <div className="admin-status">Loading events...</div>
         ) : events.length === 0 ? (
-          <div className="admin-status">
-            No events yet.
-          </div>
+          <div className="admin-status">No events yet.</div>
         ) : (
           events.map((event) => (
             <article className="admin-item" key={event.id}>
@@ -256,24 +255,19 @@ function AdminEvents() {
                 <h3>{event.title}</h3>
 
                 <p>
-                  {new Date(
-                    `${event.event_date}T00:00:00`
-                  ).toLocaleDateString("en-IN", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  {new Date(`${event.event_date}T00:00:00`).toLocaleDateString(
+                    "en-IN",
+                    {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    },
+                  )}
                 </p>
 
-                {event.location && (
-                  <p>{event.location}</p>
-                )}
+                {event.location && <p>{event.location}</p>}
 
-                {event.type && (
-                  <p className="admin-item-meta">
-                    {event.type}
-                  </p>
-                )}
+                {event.type && <p className="admin-item-meta">{event.type}</p>}
               </div>
 
               <div className="admin-item-actions">

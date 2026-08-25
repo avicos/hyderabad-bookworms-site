@@ -129,3 +129,239 @@
     font-size: 1.5rem;
   }
 }
+
+/* =========================================
+   RSVP BUTTON
+========================================= */
+
+.event-rsvp-button {
+  margin-top: 20px;
+
+  padding: 11px 22px;
+
+  border: 1px solid #111;
+  border-radius: 4px;
+
+  background: #111;
+  color: white;
+
+  font: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.event-rsvp-button:hover {
+  opacity: 0.85;
+}
+
+/* =========================================
+   RSVP OVERLAY
+========================================= */
+
+.rsvp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================
+   RSVP MODAL
+========================================= */
+
+.rsvp-modal {
+  position: relative;
+
+  width: 100%;
+  max-width: 460px;
+
+  padding: 40px;
+
+  background: #fff;
+  border-radius: 6px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.rsvp-modal h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  line-height: 1.1;
+
+  margin: 8px 0;
+}
+
+.rsvp-date {
+  color: #777;
+  margin-bottom: 30px;
+}
+
+.rsvp-close {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+
+  border: 0;
+  background: transparent;
+
+  font-size: 1.8rem;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.rsvp-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.rsvp-modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.rsvp-modal input {
+  padding: 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  font: inherit;
+}
+
+.rsvp-modal input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.rsvp-modal form button {
+  padding: 13px;
+
+  border: 0;
+  border-radius: 4px;
+
+  background: #111;
+  color: white;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.rsvp-modal form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rsvp-message {
+  margin: 0;
+
+  padding: 12px;
+
+  background: #f3f3ef;
+  border-radius: 4px;
+
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+  .rsvp-modal {
+    padding: 30px 22px;
+  }
+
+  .rsvp-modal h2 {
+    font-size: 1.7rem;
+  }
+}
+
+/* =========================================
+   CALENDAR BUTTONS
+========================================= */
+
+.calendar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.calendar-buttons button {
+  width: 100%;
+  padding: 12px 16px;
+
+  border: 1px solid #111;
+  border-radius: 4px;
+
+  background: #111;
+  color: white;
+
+  font: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.calendar-buttons button:hover {
+  opacity: 0.85;
+}
+
+.calendar-buttons button:nth-child(2) {
+  background: white;
+  color: #111;
+}
+
+.calendar-buttons button:nth-child(2):hover {
+  background: #f5f5f2;
+}
+
+/* =========================================
+   RSVP SUCCESS
+========================================= */
+
+.rsvp-success h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  margin: 8px 0 15px;
+}
+
+.rsvp-success p {
+  line-height: 1.6;
+}
+
+.rsvp-done-button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px;
+
+  border: 0;
+  background: transparent;
+
+  color: #666;
+
+  font: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.rsvp-done-button:hover {
+  color: #111;
+}
