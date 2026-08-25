@@ -12,6 +12,7 @@ import AdminEvents from "./admin/AdminEvents";
 import AdminBooks from "./admin/AdminBooks";
 import AdminMovies from "./admin/AdminMovies";
 import AdminGallery from "./admin/AdminGallery";
+import AdminSubscribers from "./admin/AdminSubscribers";
 import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
 
 function App() {
@@ -61,6 +62,15 @@ function App() {
           element={
             <ProtectedAdminRoute>
               <AdminGallery />
+            </ProtectedAdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/subscribers"
+          element={
+            <ProtectedAdminRoute>
+              <AdminSubscribers />
             </ProtectedAdminRoute>
           }
         />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
@@ -7,7 +8,7 @@ import EventCard from "../components/EventCard";
 import GalleryPreview from "../components/GalleryPreview";
 import Footer from "../components/Footer";
 
-import { supabase } from "../lib/supabase";
+
 
 function Home() {
   const [events, setEvents] = useState([]);
@@ -15,6 +16,8 @@ function Home() {
   const [email, setEmail] = useState("");
   const [subscribing, setSubscribing] = useState(false);
   const [subscribeMessage, setSubscribeMessage] = useState("");
+  const [subscriberName, setSubscriberName] = useState("");
+  const [subscriberEmail, setSubscriberEmail] = useState("");
 
   useEffect(() => {
     async function fetchEvents() {
@@ -119,19 +122,66 @@ function Home() {
 
         <section className="newsletter">
           <p className="eyebrow">STAY IN THE LOOP</p>
+
           <h2>Never miss an event.</h2>
+
           <p>
             Join the Hyderabad Bookworms mailing list and we'll let you know
             when something new is happening.
           </p>
-          <form className="subscribe-form" onSubmit={handleSubscribe}>
+
+          <form
+            className="subscribe-form"
+            onSubmit={async (event) => {
+              event.preventDefault();
+
+              setSubscribing(true);
+              setSubscribeMessage("");
+
+              const { error } = await supabase.from("subscribers").insert([
+                {
+                  name: subscriberName,
+                  email: subscriberEmail,
+                  active: true,
+                },
+              ]);
+
+              if (error) {
+                if (error.code === "23505") {
+                  setSubscribeMessage("You're already subscribed.");
+                } else {
+                  console.error(error);
+                  setSubscribeMessage(
+                    "Something went wrong. Please try again.",
+                  );
+                }
+              } else {
+                setSubscribeMessage(
+                  "You're subscribed! Welcome to the Bookworms.",
+                );
+
+                setSubscriberName("");
+                setSubscriberEmail("");
+              }
+
+              setSubscribing(false);
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Your name"
+              aria-label="Your name"
+              value={subscriberName}
+              onChange={(event) => setSubscriberName(event.target.value)}
+              required
+            />
+
             <input
               type="email"
               placeholder="your@email.com"
               aria-label="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={subscribing}
+              value={subscriberEmail}
+              onChange={(event) => setSubscriberEmail(event.target.value)}
               required
             />
 
