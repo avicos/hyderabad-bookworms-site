@@ -12,6 +12,7 @@ import AdminEvents from "./admin/AdminEvents";
 import AdminBooks from "./admin/AdminBooks";
 import AdminMovies from "./admin/AdminMovies";
 import AdminGallery from "./admin/AdminGallery";
+import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
 
 function App() {
   return (
@@ -27,10 +28,42 @@ function App() {
 
         {/* Admin */}
         <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/events" element={<AdminEvents />} />
-        <Route path="/admin/books" element={<AdminBooks />} />
-        <Route path="/admin/movies" element={<AdminMovies />} />
-        <Route path="/admin/gallery" element={<AdminGallery />} />
+
+        <Route
+          path="/admin/events"
+          element={
+            <ProtectedAdminRoute>
+              <AdminEvents />
+            </ProtectedAdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/books"
+          element={
+            <ProtectedAdminRoute>
+              <AdminBooks />
+            </ProtectedAdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/movies"
+          element={
+            <ProtectedAdminRoute>
+              <AdminMovies />
+            </ProtectedAdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/gallery"
+          element={
+            <ProtectedAdminRoute>
+              <AdminGallery />
+            </ProtectedAdminRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
