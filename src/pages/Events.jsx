@@ -237,12 +237,21 @@ function Events() {
                     <span className="event-type">{event.type}</span>
                   )}
 
-                  <button
-                    className="event-rsvp-button"
-                    onClick={() => openRsvp(event)}
-                  >
-                    RSVP
-                  </button>
+                  <div className="event-actions">
+                    <button
+                      className="event-rsvp-button"
+                      onClick={() => openRsvp(event)}
+                    >
+                      RSVP
+                    </button>
+
+                    <button
+                      className="event-calendar-button"
+                      onClick={() => addToGoogleCalendar(event)}
+                    >
+                      Add to Calendar
+                    </button>
+                  </div>
                 </div>
 
                 {event.image && (
@@ -334,13 +343,6 @@ function Events() {
                     onClick={() => addToGoogleCalendar(selectedEvent)}
                   >
                     Add to Google Calendar
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => downloadCalendarFile(selectedEvent)}
-                  >
-                    Download Calendar Event
                   </button>
                 </div>
 

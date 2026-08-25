@@ -6,6 +6,7 @@ import Books from "./pages/Books";
 import Movies from "./pages/Movies";
 import Gallery from "./pages/Gallery";
 import About from "./pages/About";
+import Event from "./pages/Event";
 
 import Admin from "./admin/Admin";
 import AdminEvents from "./admin/AdminEvents";
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
+        <Route path="/events/:slug" element={<Event />} />
         <Route path="/events" element={<Events />} />
         <Route path="/books" element={<Books />} />
         <Route path="/movies" element={<Movies />} />
