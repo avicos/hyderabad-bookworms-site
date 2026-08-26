@@ -7,6 +7,7 @@ import Movies from "./pages/Movies";
 import Gallery from "./pages/Gallery";
 import About from "./pages/About";
 import Event from "./pages/Event";
+import SecretSanta from "./pages/SecretSanta";
 
 import Admin from "./admin/Admin";
 import AdminEvents from "./admin/AdminEvents";
@@ -28,6 +29,7 @@ function App() {
         <Route path="/movies" element={<Movies />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/about" element={<About />} />
+        <Route path="/secret-santa-2026" element={<SecretSanta />} />
 
         {/* Admin */}
         <Route path="/admin" element={<Admin />} />
