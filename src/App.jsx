@@ -16,6 +16,7 @@ import AdminMovies from "./admin/AdminMovies";
 import AdminGallery from "./admin/AdminGallery";
 import AdminSubscribers from "./admin/AdminSubscribers";
 import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
+import AdminSecretSanta from "./admin/AdminSecretSanta";
 
 function App() {
   return (
@@ -78,6 +79,8 @@ function App() {
             </ProtectedAdminRoute>
           }
         />
+
+        <Route path="/admin/secret-santa" element={<AdminSecretSanta />} />
       </Routes>
     </BrowserRouter>
   );

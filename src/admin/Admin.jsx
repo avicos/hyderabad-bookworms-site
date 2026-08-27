@@ -142,6 +142,12 @@ function Admin() {
           <strong>Subscribers</strong>
           <small>Manage the mailing list</small>
         </Link>
+
+        <Link to="/admin/secret-santa">
+          <span>🎅</span>
+          <strong>Secret Santa</strong>
+          <small>Manage participants and assignments</small>
+        </Link>
       </section>
     </main>
   );

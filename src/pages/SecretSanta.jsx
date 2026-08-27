@@ -31,11 +31,11 @@ function SecretSanta() {
     setLoading(true);
 
     const { data: campaignData, error: campaignError } = await supabase
-      .from("secret_santa_campaigns")
-      .select("*")
-      .eq("slug", "secret-santa-2026")
-      .eq("status", "open")
-      .single();
+  .from("secret_santa_campaigns")
+  .select("*")
+  .eq("slug", "secret-santa-2026")
+  .in("status", ["open", "matched"])
+  .single();
 
     if (campaignError) {
       console.error("Error fetching Secret Santa campaign:", campaignError);
@@ -81,10 +81,12 @@ function SecretSanta() {
   }
 
   function startAddingWishlist() {
-    setSelectedCharacter(null);
-    setSavedEntry(null);
-    setMode("choose");
-  }
+  if (campaign?.status !== "open") return;
+
+  setSelectedCharacter(null);
+  setSavedEntry(null);
+  setMode("choose");
+}
 
   function selectCharacter(character) {
     if (claimedCharacterIds.includes(character.id)) {
@@ -103,7 +105,9 @@ function SecretSanta() {
     setMode("success");
   }
 
- async function selectEditCharacter(character) {
+async function selectEditCharacter(character) {
+  if (campaign?.status !== "open") return;
+
   const { data, error } = await supabase
     .from("secret_santa_public_entries")
     .select("*")
@@ -132,17 +136,20 @@ function SecretSanta() {
   setMode("edit");
 }
 
-  function startEditingWishlist() {
-    setSelectedCharacter(null);
-    setSavedEntry(null);
-    setMode("edit-choose");
-  }
+ function startEditingWishlist() {
+  if (campaign?.status !== "open") return;
+
+  setSelectedCharacter(null);
+  setSavedEntry(null);
+  setMode("edit-choose");
+}
 
   function goHome() {
     setSelectedCharacter(null);
     setSavedEntry(null);
     setMode("home");
   }
+ 
 
   return (
     <>
@@ -166,13 +173,22 @@ function SecretSanta() {
           <p>Secret Santa isn't open right now.</p>
         ) : (
           <>
-            {mode === "home" && (
-              <SecretSantaHome
-                onAdd={startAddingWishlist}
-                onEdit={startEditingWishlist}
-                onFriends={() => setMode("friends")}
-              />
-            )}
+          {mode === "home" && (
+  <SecretSantaHome
+    onAdd={
+      campaign.status === "open"
+        ? startAddingWishlist
+        : undefined
+    }
+    onEdit={
+      campaign.status === "open"
+        ? startEditingWishlist
+        : undefined
+    }
+    onFriends={() => setMode("friends")}
+    campaignStatus={campaign.status}
+  />
+)}
 
             {mode === "choose" && (
               <SecretSantaCharacterPicker
