@@ -8,8 +8,6 @@ function AdminSecretSanta() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [editingAssignment, setEditingAssignment] = useState(null);
-
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -20,69 +18,81 @@ function AdminSecretSanta() {
     fetchSecretSanta();
   }, []);
 
- async function handleFinalizeAssignments() {
-  if (!campaign) return;
+  async function handleFinalizeAssignments() {
+    if (!campaign) return;
 
-  const confirmed = window.confirm(
-    "Are you sure you want to finalize the assignments? " +
-      "Participants will no longer be able to edit their wishlists, " +
-      "and assignments can no longer be changed.",
-  );
+    const confirmed = window.confirm(
+      "Are you sure you want to finalize the assignments? " +
+        "Participants will no longer be able to edit their wishlists, " +
+        "and assignments can no longer be changed.",
+    );
 
-  if (!confirmed) return;
+    if (!confirmed) return;
 
-  setFinalizing(true);
-  setFinalizeError("");
+    setFinalizing(true);
+    setFinalizeError("");
 
-  const { error } = await supabase.rpc(
-    "finalize_secret_santa_assignments",
-    {
+    const { error } = await supabase.rpc("finalize_secret_santa_assignments", {
       campaign_uuid: campaign.id,
-    },
-  );
+    });
 
-  if (error) {
-    console.error(
-      "Error finalizing Secret Santa assignments:",
-      error,
-    );
+    if (error) {
+      console.error("Error finalizing Secret Santa assignments:", error);
 
-    setFinalizeError(
-      error.message ||
-        "Could not finalize assignments.",
-    );
+      setFinalizeError(error.message || "Could not finalize assignments.");
+
+      setFinalizing(false);
+      return;
+    }
+
+    // Update the UI immediately.
+    setCampaign((current) => ({
+      ...current,
+      status: "matched",
+    }));
 
     setFinalizing(false);
-    return;
   }
 
-  // Update the UI immediately.
-  setCampaign((current) => ({
-    ...current,
-    status: "matched",
-  }));
+  async function handleAssignmentChange(giverId, recipientId) {
+    if (!campaign) return;
 
-  setFinalizing(false);
-}
-
-  async function handleAssignmentChange(newRecipientId) {
-    if (!editingAssignment) return;
     setSaving(true);
     setError("");
-    const { error } = await supabase.rpc("swap_secret_santa_assignment", {
-      campaign_uuid: campaign.id,
-      giver_entry_uuid: editingAssignment.id,
-      new_recipient_entry_uuid: newRecipientId,
-    });
+
+    const { error } = await supabase
+      .from("secret_santa_entries")
+      .update({
+        assigned_to_entry_id: recipientId || null,
+      })
+      .eq("id", giverId)
+      .eq("campaign_id", campaign.id);
+
     if (error) {
-      console.error("Error changing assignment:", error);
-      setError(error.message || "Could not change assignment.");
+      console.error("Error saving assignment:", error);
+      setError(error.message || "Could not save assignment.");
       setSaving(false);
       return;
     }
-    setEditingAssignment(null);
+
+    setAssignments((current) =>
+      current.map((assignment) => {
+        if (assignment.id !== giverId) {
+          return assignment;
+        }
+
+        const recipient = current.find(
+          (candidate) => candidate.id === recipientId,
+        );
+
+        return {
+          ...assignment,
+          assignedTo: recipient?.character || null,
+        };
+      }),
+    );
+
     setSaving(false);
-    await fetchSecretSanta();
   }
 
   async function fetchSecretSanta() {
@@ -175,6 +185,15 @@ function AdminSecretSanta() {
     (assignment) => assignment.assignedTo,
   ).length;
 
+  function isRecipientTaken(recipientId, giverId) {
+    return assignments.some(
+      (assignment) =>
+        assignment.id !== giverId &&
+        assignment.assignedTo &&
+        assignment.assignedTo.id === recipientId,
+    );
+  }
+
   return (
     <main className="admin-manager">
       <header className="admin-manager-header">
@@ -247,84 +266,93 @@ function AdminSecretSanta() {
               </span>
             </div>
 
-            {editingAssignment && (
-              <section className="admin-form-card">
-                <div className="admin-list-header">
-                  <div>
-                    <p className="eyebrow">EDIT ASSIGNMENT</p>
-                    <h2>{editingAssignment.character?.name}</h2>
-                    <p>
-                      Currently gets{" "}
-                      <strong>{editingAssignment.assignedTo?.name}</strong>
-                    </p>
-                  </div>
-
-                  <button
-                    className="admin-secondary-button"
-                    type="button"
-                    onClick={() => {
-                      setEditingAssignment(null);
-                      setError("");
-                    }}
-                    disabled={saving}
-                  >
-                    Cancel
-                  </button>
-                </div>
-
-                <div className="secret-santa-recipient-options">
-                  <p className="eyebrow">CHANGE RECIPIENT</p>
-                  {assignments.map((candidate) => {
-                    const isSelf = candidate.id === editingAssignment.id;
-                    const isCurrent =
-                      candidate.id === editingAssignment.assignedTo?.id;
-                    return (
-                      <button
-                        key={candidate.id}
-                        type="button"
-                        className={`secret-santa-recipient-option ${
-                          isCurrent ? "current" : ""
-                        }`}
-                        disabled={isSelf || isCurrent || saving}
-                        onClick={() => handleAssignmentChange(candidate.id)}
-                      >
-                        <span>{candidate.character?.name}</span>
-                        {isCurrent && <small>Current recipient</small>}
-                        {isSelf && <small>Cannot assign themselves</small>}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {error && <p className="admin-error">{error}</p>}
-              </section>
-            )}
-
             {assignments.length === 0 ? (
               <div className="admin-status">No participants yet.</div>
             ) : (
-              assignments.map((assignment) => (
-                <article className="admin-item" key={assignment.id}>
-                  <div className="admin-item-main">
-                    <h3>{assignment.character?.name || "Unknown character"}</h3>
-                    {assignment.assignedTo ? (
-                      <p>→ {assignment.assignedTo.name}</p>
-                    ) : (
-                      <p>Not assigned</p>
-                    )}
-                  </div>
+              assignments.map((assignment) => {
+                const currentRecipientId =
+                  assignments.find(
+                    (candidate) =>
+                      candidate.character?.id === assignment.assignedTo?.id,
+                  )?.id || "";
 
-                  <div className="admin-item-actions">
-                    <button
-                      className="admin-edit-button"
-                      type="button"
-                      onClick={() => setEditingAssignment(assignment)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </article>
-              ))
+                return (
+                  <article className="admin-item" key={assignment.id}>
+                    <div className="admin-item-main">
+                      <h3>
+                        {assignment.character?.name || "Unknown character"}
+                      </h3>
+
+                      <div className="secret-santa-admin-wishlist">
+                        <p>
+                          <strong>Wishlist:</strong>
+                        </p>
+
+                        {assignment.wishlist_1 && (
+                          <p>• {assignment.wishlist_1}</p>
+                        )}
+
+                        {assignment.wishlist_2 && (
+                          <p>• {assignment.wishlist_2}</p>
+                        )}
+
+                        {assignment.wishlist_3 && (
+                          <p>• {assignment.wishlist_3}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="admin-item-actions">
+                      <label>
+                        Assigned to
+                        <select
+                          value={
+                            assignments.find(
+                              (candidate) =>
+                                candidate.character?.id ===
+                                assignment.assignedTo?.id,
+                            )?.id || ""
+                          }
+                          onChange={(event) =>
+                            handleAssignmentChange(
+                              assignment.id,
+                              event.target.value,
+                            )
+                          }
+                          disabled={campaign.status !== "open"}
+                        >
+                          <option value="">Select recipient</option>
+
+                          {assignments.map((candidate) => {
+                            const isSelf = candidate.id === assignment.id;
+
+                            const isTaken =
+                              candidate.id !== assignment.id &&
+                              assignments.some(
+                                (otherAssignment) =>
+                                  otherAssignment.id !== assignment.id &&
+                                  otherAssignment.assignedTo?.id ===
+                                    candidate.character?.id,
+                              );
+
+                            return (
+                              <option
+                                key={candidate.id}
+                                value={candidate.id}
+                                disabled={isSelf || isTaken}
+                              >
+                                {candidate.character?.name}
+                                {isSelf ? " (yourself)" : ""}
+                                {isTaken ? " (already assigned)" : ""}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </label>
+                    </div>
+                  </article>
+                );
+              })
             )}
           </section>
         </>
