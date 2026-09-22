@@ -163,13 +163,19 @@ function SecretSanta() {
 
   const canSubmitWishlists = campaign?.status === "open" && wishlistsHaveOpened;
 
+  const assignmentRevealsAt = campaign?.assignment_reveals_at
+    ? new Date(campaign.assignment_reveals_at)
+    : null;
+
+  const assignmentsHaveBeenRevealed =
+    assignmentRevealsAt && currentTime >= assignmentRevealsAt;
+
   return (
     <>
       <Navbar />
 
       <main className="secret-santa-page">
         <header className="secret-santa-header">
-          <p className="eyebrow">HYDERABAD BOOKWORMS</p>
 
           <h1>Secret Santa</h1>
 
@@ -194,6 +200,7 @@ function SecretSanta() {
                 wishlistOpensAt={wishlistOpensAt}
                 currentTime={currentTime}
                 canSubmitWishlists={canSubmitWishlists}
+                assignmentsHaveBeenRevealed={assignmentsHaveBeenRevealed}
               />
             )}
 

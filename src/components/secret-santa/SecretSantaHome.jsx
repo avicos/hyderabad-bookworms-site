@@ -6,6 +6,7 @@ function SecretSantaHome({
   wishlistOpensAt,
   currentTime,
   canSubmitWishlists,
+  assignmentsHaveBeenRevealed,
 }) {
   const isMatched = campaignStatus === "matched";
   const timeRemaining = wishlistOpensAt
@@ -35,20 +36,22 @@ function SecretSantaHome({
           </div>
         </div>
       )}
-
       {isMatched && (
         <div className="secret-santa-matched-message">
           <p className="eyebrow">SECRET SANTA</p>
 
           <h2>The assignments are in!</h2>
 
-          <p>
-            The wishlists are in and the Secret Santa assignments have been
-            finalized.
-          </p>
+          {assignmentsHaveBeenRevealed ? (
+            <p>Your Secret Santa pairing is ready to be revealed! 🎁</p>
+          ) : (
+            <p>
+              Your Secret Santa buddy has been chosen. You'll find out who they
+              are in a day or so...
+            </p>
+          )}
         </div>
       )}
-
       <div className="secret-santa-actions">
         {canSubmitWishlists && (
           <>
