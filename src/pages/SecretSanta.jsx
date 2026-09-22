@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { supabase } from "../lib/supabase";
 
 import SecretSantaHome from "../components/secret-santa/SecretSantaHome";
@@ -172,7 +170,6 @@ function SecretSanta() {
 
   return (
     <>
-      <Navbar />
 
       <main className="secret-santa-page">
         <header className="secret-santa-header">
@@ -261,8 +258,6 @@ function SecretSanta() {
           </>
         )}
       </main>
-
-      <Footer />
     </>
   );
 }
