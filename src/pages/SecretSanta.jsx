@@ -171,16 +171,18 @@ function SecretSanta() {
   return (
     <>
       <main className="secret-santa-page">
-        <header className="secret-santa-header">
-          <h1>Secret Santa</h1>
+        {mode === "home" && (
+          <header className="secret-santa-header">
+            <h1>Secret Santa</h1>
 
-          {wishlistsHaveOpened && campaign?.status === "open" && (
-            <p className="secret-santa-intro">
-              Pick a character, make your wishlist, and see what your friends
-              are wishing for.
-            </p>
-          )}
-        </header>
+            {wishlistsHaveOpened && campaign?.status === "open" && (
+              <p className="secret-santa-intro">
+                Pick a character, make your wishlist, and see what your friends
+                are wishing for.
+              </p>
+            )}
+          </header>
+        )}
 
         {loading ? (
           <p>Loading Secret Santa...</p>
