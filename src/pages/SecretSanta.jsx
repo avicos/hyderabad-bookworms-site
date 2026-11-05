@@ -134,6 +134,7 @@ function SecretSanta() {
       wishlist_1: data.wishlist_1 || "",
       wishlist_2: data.wishlist_2 || "",
       wishlist_3: data.wishlist_3 || "",
+      wishlist_4: data.wishlist_4 || "",
     });
 
     setMode("edit");
@@ -251,6 +252,8 @@ function SecretSanta() {
               <SecretSantaSuccess
                 entryId={savedEntry.entryId}
                 character={savedEntry.character}
+                onHome={goHome}
+                onFriends={() => setMode("friends")}
               />
             )}
 

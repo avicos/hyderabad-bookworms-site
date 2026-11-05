@@ -12,6 +12,7 @@ function SecretSantaWishlistForm({
     wishlist_1: existingEntry?.wishlist_1 || "",
     wishlist_2: existingEntry?.wishlist_2 || "",
     wishlist_3: existingEntry?.wishlist_3 || "",
+    wishlist_4: existingEntry?.wishlist_4 || "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -27,7 +28,17 @@ function SecretSantaWishlistForm({
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!campaign || !character) return;
+   if (!campaign || !character) return;
+
+// Require at least one non-empty wish
+const hasAtLeastOneWish = Object.values(wishlist).some(
+  (wish) => wish.trim().length > 0
+);
+
+if (!hasAtLeastOneWish) {
+  setError("Please add at least one wish before saving.");
+  return;
+}
 
     setSaving(true);
     setError("");
@@ -36,6 +47,7 @@ function SecretSantaWishlistForm({
       wishlist_1: wishlist.wishlist_1.trim(),
       wishlist_2: wishlist.wishlist_2.trim(),
       wishlist_3: wishlist.wishlist_3.trim(),
+      wishlist_4: wishlist.wishlist_4.trim(),
     };
 
     let error = null;
@@ -44,40 +56,53 @@ function SecretSantaWishlistForm({
     /*
      * EDIT EXISTING WISHLIST
      */
-   if (existingEntry) {
-  const { data, error: functionError } = await supabase.rpc(
-    "update_secret_santa_wishlist",
-    {
-      entry_uuid: existingEntry.id,
-      new_wishlist_1: wishlist.wishlist_1.trim(),
-      new_wishlist_2: wishlist.wishlist_2.trim(),
-      new_wishlist_3: wishlist.wishlist_3.trim(),
-    }
-  );
-
-  error = functionError;
-  entryId = existingEntry.id;
-
-  if (!error && data !== true) {
-    error = {
-      code: "UPDATE_FAILED",
-      message: "Wishlist could not be updated.",
-    };
-  }
-} else {
-
-    /*
-     * CREATE NEW WISHLIST
-     */
-      const result = await supabase.from("secret_santa_entries").insert([
+    if (existingEntry) {
+      const { data, error: functionError } = await supabase.rpc(
+        "update_secret_santa_wishlist",
         {
+          entry_uuid: existingEntry.id,
+          new_wishlist_1: wishlist.wishlist_1.trim(),
+          new_wishlist_2: wishlist.wishlist_2.trim(),
+          new_wishlist_3: wishlist.wishlist_3.trim(),
+          new_wishlist_4: wishlist.wishlist_4.trim(),
+        },
+      );
+
+      error = functionError;
+      entryId = existingEntry.id;
+
+      if (!error && data !== true) {
+        error = {
+          code: "UPDATE_FAILED",
+          message: "Wishlist could not be updated.",
+        };
+      }
+    } else {
+      const { error: insertError } = await supabase
+        .from("secret_santa_entries")
+        .insert({
           campaign_id: campaign.id,
           character_id: character.id,
           ...wishlistData,
-        },
-      ]);
+        });
 
-      error = result.error;
+      error = insertError;
+
+      // Retrieve the entry ID through the public view
+      if (!error) {
+        const { data, error: lookupError } = await supabase
+          .from("secret_santa_public_entries")
+          .select("id")
+          .eq("campaign_id", campaign.id)
+          .eq("character_id", character.id)
+          .single();
+
+        if (lookupError) {
+          error = lookupError;
+        } else {
+          entryId = data.id;
+        }
+      }
     }
 
     /*
@@ -128,7 +153,7 @@ function SecretSantaWishlistForm({
         </div>
 
         <div>
-          <p className="eyebrow">YOUR CHARACTER</p>
+          <p className="eyebrow">YOU'RE GOING TO BE...</p>
 
           <h2>{character.name}</h2>
         </div>
@@ -136,20 +161,20 @@ function SecretSantaWishlistForm({
 
       <form className="secret-santa-wishlist-form" onSubmit={handleSubmit}>
         <div className="secret-santa-wishlist-field">
-          <label htmlFor="wishlist_1">Something I'd love</label>
+          <label htmlFor="wishlist_1">First Wish</label>
 
           <textarea
             id="wishlist_1"
             name="wishlist_1"
             value={wishlist.wishlist_1}
             onChange={handleChange}
-            placeholder="Books, gifts, ideas..."
+            placeholder="Something you'd love..."
             rows="4"
           />
         </div>
 
         <div className="secret-santa-wishlist-field">
-          <label htmlFor="wishlist_2">Something specific I'd like</label>
+          <label htmlFor="wishlist_2">Second Wish</label>
 
           <textarea
             id="wishlist_2"
@@ -162,14 +187,27 @@ function SecretSantaWishlistForm({
         </div>
 
         <div className="secret-santa-wishlist-field">
-          <label htmlFor="wishlist_3">Something I'd rather avoid</label>
+          <label htmlFor="wishlist_3">Third Wish</label>
 
           <textarea
             id="wishlist_3"
             name="wishlist_3"
             value={wishlist.wishlist_3}
             onChange={handleChange}
-            placeholder="Anything you'd prefer not to receive..."
+            placeholder="That old classic you wanted to read..."
+            rows="4"
+          />
+        </div>
+
+        <div className="secret-santa-wishlist-field">
+          <label htmlFor="wishlist_4">Fourth Wish</label>
+
+          <textarea
+            id="wishlist_4"
+            name="wishlist_4"
+            value={wishlist.wishlist_4}
+            onChange={handleChange}
+            placeholder="The latest bestseller, perhaps..."
             rows="4"
           />
         </div>
@@ -183,11 +221,6 @@ function SecretSantaWishlistForm({
               ? "Update my wishlist"
               : "Save my wishlist"}
         </button>
-
-        <p className="secret-santa-email-note">
-          Afraid you'll forget what you chose?{" "}
-          <button type="button">We can email you about it!</button>
-        </p>
       </form>
     </section>
   );

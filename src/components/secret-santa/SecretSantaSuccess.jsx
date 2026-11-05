@@ -1,22 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
+import "./SecretSantaSuccess.css";
 
-function SecretSantaSuccess({ entryId, character }) {
-  const [email, setEmail] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
+function SecretSantaSuccess({ entryId, character, onHome, onFriends }) {
+  const [wishlist, setWishlist] = useState(null);
+  const [wishlistLoading, setWishlistLoading] = useState(true);
 
- function handleEmailSubmit(event) {
-  event.preventDefault();
+  useEffect(() => {
+    async function fetchWishlist() {
+      const { data, error } = await supabase
+        .from("secret_santa_public_entries")
+        .select("wishlist_1, wishlist_2, wishlist_3, wishlist_4")
+        .eq("id", entryId)
+        .single();
 
-  if (!email.trim()) return;
+      if (error) {
+        console.error("Error fetching saved wishlist:", error);
+      } else {
+        setWishlist(data);
+      }
 
-  setMessage(
-    "We'll send you a copy of your wishlist."
-  );
+      setWishlistLoading(false);
+    }
 
-  setEmail("");
-}
+    if (entryId) {
+      fetchWishlist();
+    } else {
+      setWishlistLoading(false);
+    }
+  }, [entryId]);
+
+  const wishlistItems = [
+    wishlist?.wishlist_1,
+    wishlist?.wishlist_2,
+    wishlist?.wishlist_3,
+    wishlist?.wishlist_4,
+  ].filter((item) => item?.trim());
 
   return (
     <div className="secret-santa-success">
@@ -25,55 +44,42 @@ function SecretSantaSuccess({ entryId, character }) {
       <h2>You're all set!</h2>
 
       <p>
-        Your Secret Santa character is{" "}
-        <strong>{character.name}</strong>.
+        Your Secret Santa character is <strong>{character?.name}</strong>.
       </p>
 
-      <div className="secret-santa-email-section">
-        <p className="secret-santa-email-heading">
-          Afraid you'll forget what you chose?
-        </p>
+      {!wishlistLoading && wishlistItems.length > 0 && (
+        <div className="secret-santa-success-wishlist">
+          <h3>These are your wishes...</h3>
 
-        <p className="secret-santa-email-description">
-          Give us your email and we'll send you a copy
-          of your character and wishlist.
-        </p>
-
-        <form
-          className="secret-santa-email-form"
-          onSubmit={handleEmailSubmit}
-        >
-          <input
-            type="email"
-            value={email}
-            onChange={(event) =>
-              setEmail(event.target.value)
-            }
-            placeholder="you@example.com"
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={saving}
-          >
-            {saving
-              ? "Saving..."
-              : "Email me my wishlist"}
-          </button>
-        </form>
-
-        {message && (
-          <p className="secret-santa-email-message">
-            {message}
-          </p>
-        )}
-      </div>
+          <ul>
+            {wishlistItems.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <p className="secret-santa-success-note">
-        You can come back later to see what your
-        friends have added.
+        Take screenshot for safekeeping!
       </p>
+
+      <div className="secret-santa-success-actions">
+        <button
+          type="button"
+          className="secret-santa-success-secondary"
+          onClick={onFriends}
+        >
+          See what your friends have added
+        </button>
+
+        <button
+          type="button"
+          className="secret-santa-success-primary"
+          onClick={onHome}
+        >
+          Take me home
+        </button>
+      </div>
     </div>
   );
 }

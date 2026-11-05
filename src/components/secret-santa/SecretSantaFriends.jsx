@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import "./SecretSantaFriends.css";
 
 function SecretSantaFriends({ campaign, onBack }) {
   const [entries, setEntries] = useState([]);
@@ -31,11 +32,12 @@ function SecretSantaFriends({ campaign, onBack }) {
 
   return (
     <section className="secret-santa-friends">
+
       <button className="secret-santa-back" type="button" onClick={onBack}>
         ← Back
       </button>
 
-      <div className="secret-santa-friends-header">
+      <header className="secret-santa-friends-header">
         <p className="eyebrow">SECRET SANTA</p>
 
         <h2>What your friends are wishing for</h2>
@@ -43,50 +45,60 @@ function SecretSantaFriends({ campaign, onBack }) {
         <p>
           Browse the characters and see what they've added to their wishlists.
         </p>
-      </div>
+      </header>
 
       {loading ? (
         <p>Loading wishlists...</p>
       ) : entries.length === 0 ? (
-        <p className="secret-santa-empty">Nobody has added a wishlist yet.</p>
+        <p className="secret-santa-empty">
+          Nobody has added a wishlist yet.
+        </p>
       ) : (
-        <div className="secret-santa-friends-grid">
-          {entries.map((entry) => (
-            <article className="secret-santa-friend-card" key={entry.id}>
-              <div className="secret-santa-friend-image">
-                {entry.character_image ? (
-                  <img src={entry.character_image} alt={entry.character_name} />
-                ) : (
-                  <span>?</span>
-                )}
-              </div>
+        <div className="secret-santa-friends-list">
 
-              <h3>{entry.character_name}</h3>
+          {entries.map((entry) => {
+            const wishes = [
+              entry.wishlist_1,
+              entry.wishlist_2,
+              entry.wishlist_3,
+              entry.wishlist_4,
+            ].filter((wish) => wish?.trim());
 
-              <div className="secret-santa-friend-wishlist">
-                {entry.wishlist_1 && (
-                  <div>
-                    <h4>Something I'd love</h4>
-                    <p>{entry.wishlist_1}</p>
+            return (
+              <article
+                className="secret-santa-friend-row"
+                key={entry.id}
+              >
+                <div className="secret-santa-friend-character">
+                  <div className="secret-santa-friend-image">
+                    {entry.character_image ? (
+                      <img
+                        src={entry.character_image}
+                        alt={entry.character_name}
+                      />
+                    ) : (
+                      <span>?</span>
+                    )}
                   </div>
-                )}
 
-                {entry.wishlist_2 && (
-                  <div>
-                    <h4>Something specific</h4>
-                    <p>{entry.wishlist_2}</p>
-                  </div>
-                )}
+                  <h3>{entry.character_name}</h3>
+                </div>
 
-                {entry.wishlist_3 && (
-                  <div>
-                    <h4>Something I'd rather avoid</h4>
-                    <p>{entry.wishlist_3}</p>
-                  </div>
-                )}
-              </div>
-            </article>
-          ))}
+                <div className="secret-santa-friend-wishes">
+                  {wishes.length > 0 ? (
+                    <ul>
+                      {wishes.map((wish, index) => (
+                        <li key={index}>{wish}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No wishes added.</p>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+
         </div>
       )}
     </section>
