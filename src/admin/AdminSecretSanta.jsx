@@ -548,13 +548,13 @@ function AdminSecretSanta() {
                       </p>
 
                       {/* WISHES */}
-                      <ol className="secret-santa-reveal-wishes">
+                      <ul className="secret-santa-reveal-wishes">
                         {revealAssignment.assignedWishlist.map(
                           (wish, index) => (
                             <li key={index}>{wish}</li>
                           ),
                         )}
-                      </ol>
+                      </ul>
 
                       {/* CHARACTER PHRASE */}
                       {revealAssignment.assignedTo?.phrase && (
