@@ -520,6 +520,7 @@ function AdminSecretSanta() {
 
                         <p>{revealAssignment.character?.name}</p>
                       </div>
+                      
 
                       <div className="secret-santa-reveal-character">
                         <div className="secret-santa-reveal-character-image">
