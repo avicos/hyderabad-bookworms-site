@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toPng } from "html-to-image";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import "./AdminManager.css";
@@ -15,6 +16,78 @@ function AdminSecretSanta() {
   const [finalizing, setFinalizing] = useState(false);
   const [finalizeError, setFinalizeError] = useState("");
   const [revealAssignment, setRevealAssignment] = useState(null);
+
+  const revealCardRef = useRef(null);
+  const [downloadingCard, setDownloadingCard] = useState(false);
+  const [downloadError, setDownloadError] = useState("");
+
+  async function handleDownloadRevealCard() {
+    const card = revealCardRef.current;
+
+    if (!card || !revealAssignment) return;
+
+    setDownloadingCard(true);
+    setDownloadError("");
+
+    try {
+      // Wait for fonts to finish loading
+      await document.fonts.ready;
+
+      // Make sure character images have loaded
+      const images = Array.from(card.querySelectorAll("img"));
+
+      await Promise.all(
+        images.map((img) => {
+          if (img.complete && img.naturalWidth > 0) {
+            return Promise.resolve();
+          }
+
+          if (img.complete) {
+            return Promise.reject(
+              new Error("A character image could not be loaded."),
+            );
+          }
+
+          return new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = () =>
+              reject(new Error("A character image could not be loaded."));
+          });
+        }),
+      );
+
+      const dataUrl = await toPng(card, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: "#f8eae7",
+      });
+
+      const safeName = (name) =>
+        (name || "character")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "");
+
+      const filename = `secret-santa-${safeName(
+        revealAssignment.character?.name,
+      )}-to-${safeName(revealAssignment.assignedTo?.name)}.png`;
+
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = dataUrl;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error generating reveal card:", error);
+      setDownloadError(
+        "Could not generate the card. Please check that the character images have loaded and try again.",
+      );
+    } finally {
+      setDownloadingCard(false);
+    }
+  }
 
   useEffect(() => {
     fetchSecretSanta();
@@ -146,12 +219,13 @@ function AdminSecretSanta() {
     const assignedEntryIds = entriesData
       .map((entry) => entry.assigned_to_entry_id)
       .filter(Boolean);
-   let assignedEntries = [];
+    let assignedEntries = [];
 
-if (assignedEntryIds.length > 0) {
-  const { data, error } = await supabase
-    .from("secret_santa_entries")
-    .select(`
+    if (assignedEntryIds.length > 0) {
+      const { data, error } = await supabase
+        .from("secret_santa_entries")
+        .select(
+          `
       id,
       wishlist_1,
       wishlist_2,
@@ -163,50 +237,49 @@ if (assignedEntryIds.length > 0) {
         image,
         phrase
       )
-    `)
-    .in("id", assignedEntryIds);
+    `,
+        )
+        .in("id", assignedEntryIds);
 
-  if (error) {
-    console.error("Error fetching assigned entries:", error);
-  } else {
-    assignedEntries = data || [];
-  }
-}
+      if (error) {
+        console.error("Error fetching assigned entries:", error);
+      } else {
+        assignedEntries = data || [];
+      }
+    }
 
-// Map each recipient entry ID to their complete entry
-const assignedMap = new Map(
-  assignedEntries.map((entry) => [entry.id, entry])
-);
+    // Map each recipient entry ID to their complete entry
+    const assignedMap = new Map(
+      assignedEntries.map((entry) => [entry.id, entry]),
+    );
 
-const formattedAssignments = entriesData.map((entry) => {
-  const recipientEntry = assignedMap.get(
-    entry.assigned_to_entry_id
-  );
+    const formattedAssignments = entriesData.map((entry) => {
+      const recipientEntry = assignedMap.get(entry.assigned_to_entry_id);
 
-  return {
-    id: entry.id,
-    character: entry.character,
-    assignedTo: recipientEntry?.character || null,
+      return {
+        id: entry.id,
+        character: entry.character,
+        assignedTo: recipientEntry?.character || null,
 
-    // Recipient's wishlist
-    assignedWishlist: [
-      recipientEntry?.wishlist_1,
-      recipientEntry?.wishlist_2,
-      recipientEntry?.wishlist_3,
-      recipientEntry?.wishlist_4,
-    ].filter((wish) => wish?.trim()),
+        // Recipient's wishlist
+        assignedWishlist: [
+          recipientEntry?.wishlist_1,
+          recipientEntry?.wishlist_2,
+          recipientEntry?.wishlist_3,
+          recipientEntry?.wishlist_4,
+        ].filter((wish) => wish?.trim()),
 
-    email: entry.email,
+        email: entry.email,
 
-    wishlist_1: entry.wishlist_1,
-    wishlist_2: entry.wishlist_2,
-    wishlist_3: entry.wishlist_3,
-    wishlist_4: entry.wishlist_4,
-  };
-});
+        wishlist_1: entry.wishlist_1,
+        wishlist_2: entry.wishlist_2,
+        wishlist_3: entry.wishlist_3,
+        wishlist_4: entry.wishlist_4,
+      };
+    });
 
-setAssignments(formattedAssignments);
-setLoading(false);
+    setAssignments(formattedAssignments);
+    setLoading(false);
   }
 
   const assignedCount = assignments.filter(
@@ -416,47 +489,83 @@ setLoading(false);
                   </button>
                 </div>
 
-                <article className="secret-santa-reveal-card">
-                  <p className="secret-santa-reveal-brand">
-                    HYDERABAD BOOKWORMS
-                  </p>
-
-                  <h2 id="reveal-card-title">Secret Santa</h2>
-
-                  <div className="secret-santa-reveal-divider" />
-
-                  <p className="secret-santa-reveal-greeting">
-                    Hi {revealAssignment.character?.name},
-                  </p>
-
-                  <p className="secret-santa-reveal-message">
-                    Your buddy this Christmas is{" "}
-                    <strong>{revealAssignment.assignedTo?.name}</strong>.
-                  </p>
-
-                  {revealAssignment.assignedTo?.image && (
-                    <div className="secret-santa-reveal-image">
-                      <img
-                        src={revealAssignment.assignedTo.image}
-                        alt={revealAssignment.assignedTo.name}
-                      />
-                    </div>
-                  )}
-
-                  <h3>These are their wishes...</h3>
-
-                  <ol className="secret-santa-reveal-wishes">
-                    {revealAssignment.assignedWishlist.map((wish, index) => (
-                      <li key={index}>{wish}</li>
-                    ))}
-                  </ol>
-
-                  {revealAssignment.assignedTo?.phrase && (
-                    <p className="secret-santa-reveal-phrase">
-                      {revealAssignment.assignedTo.phrase}
+                <article
+                  className="secret-santa-reveal-card"
+                  ref={revealCardRef}
+                >
+                  {/* HEADER - OUTSIDE PANEL */}
+                  <header className="secret-santa-reveal-header">
+                    <p className="secret-santa-reveal-brand">
+                      HYDERABAD BOOKWORMS
                     </p>
-                  )}
 
+                    <h2>Secret Santa</h2>
+                  </header>
+
+                  {/* TRANSLUCENT CONTENT PANEL */}
+                  <div className="secret-santa-reveal-content">
+                    {/* GIVER AND RECIPIENT */}
+                    <div className="secret-santa-reveal-characters">
+                      <div className="secret-santa-reveal-character">
+                        <div className="secret-santa-reveal-character-image">
+                          {revealAssignment.character?.image ? (
+                            <img
+                              src={revealAssignment.character.image}
+                              alt={revealAssignment.character.name}
+                            />
+                          ) : (
+                            <span>?</span>
+                          )}
+                        </div>
+
+                        <p>{revealAssignment.character?.name}</p>
+                      </div>
+
+                      <div className="secret-santa-reveal-character">
+                        <div className="secret-santa-reveal-character-image">
+                          {revealAssignment.assignedTo?.image ? (
+                            <img
+                              src={revealAssignment.assignedTo.image}
+                              alt={revealAssignment.assignedTo.name}
+                            />
+                          ) : (
+                            <span>?</span>
+                          )}
+                        </div>
+
+                        <p>{revealAssignment.assignedTo?.name}</p>
+                      </div>
+                    </div>
+
+                    {/* GREETING */}
+                    <div className="secret-santa-reveal-body">
+                      <h3>Dear {revealAssignment.character?.name},</h3>
+
+                      <p className="secret-santa-reveal-message">
+                        Your buddy for this Christmas is{" "}
+                        <strong>{revealAssignment.assignedTo?.name}</strong>.
+                        Here's what they are wishing for:
+                      </p>
+
+                      {/* WISHES */}
+                      <ol className="secret-santa-reveal-wishes">
+                        {revealAssignment.assignedWishlist.map(
+                          (wish, index) => (
+                            <li key={index}>{wish}</li>
+                          ),
+                        )}
+                      </ol>
+
+                      {/* CHARACTER PHRASE */}
+                      {revealAssignment.assignedTo?.phrase && (
+                        <p className="secret-santa-reveal-phrase">
+                          P.S. {revealAssignment.assignedTo.phrase}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* FOOTER - OUTSIDE PANEL */}
                   <div className="secret-santa-reveal-footer">
                     MERRY CHRISTMAS!
                   </div>
@@ -465,11 +574,30 @@ setLoading(false);
                 <div className="secret-santa-reveal-modal-actions">
                   <button
                     type="button"
+                    className="secret-santa-reveal-close"
                     onClick={() => setRevealAssignment(null)}
                   >
                     Close preview
                   </button>
+
+                  <button
+                    type="button"
+                    className="secret-santa-reveal-download"
+                    onClick={handleDownloadRevealCard}
+                    disabled={downloadingCard}
+                  >
+                    {downloadingCard ? "Generating..." : "Download PNG"}
+                  </button>
                 </div>
+
+                {downloadError && (
+                  <p
+                    className="secret-santa-reveal-download-error"
+                    role="alert"
+                  >
+                    {downloadError}
+                  </p>
+                )}
               </div>
             </div>
           )}
