@@ -384,26 +384,7 @@ function AdminSecretSanta() {
                         {assignment.character?.name || "Unknown character"}
                       </h3>
 
-                      <div className="secret-santa-admin-wishlist">
-                        <p>
-                          <strong>Wishlist:</strong>
-                        </p>
-
-                        {assignment.wishlist_1 && (
-                          <p>• {assignment.wishlist_1}</p>
-                        )}
-
-                        {assignment.wishlist_2 && (
-                          <p>• {assignment.wishlist_2}</p>
-                        )}
-
-                        {assignment.wishlist_3 && (
-                          <p>• {assignment.wishlist_3}</p>
-                        )}
-                        {assignment.wishlist_4 && (
-                          <p>• {assignment.wishlist_4}</p>
-                        )}
-                      </div>
+                      
                     </div>
 
                     <div className="admin-item-actions">
@@ -543,7 +524,7 @@ function AdminSecretSanta() {
                       <h3>Dear {revealAssignment.character?.name},</h3>
 
                       <p className="secret-santa-reveal-message">
-                        Your buddy for this Christmas is{" "}
+                        Your sugar baby for this Christmas is{" "}
                         <strong>{revealAssignment.assignedTo?.name}</strong>.
                         Here's what they are wishing for:
                       </p>

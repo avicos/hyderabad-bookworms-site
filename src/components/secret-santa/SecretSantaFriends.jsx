@@ -38,7 +38,6 @@ function SecretSantaFriends({ campaign, onBack }) {
       </button>
 
       <header className="secret-santa-friends-header">
-        <p className="eyebrow">SECRET SANTA</p>
 
         <h2>What your friends are wishing for</h2>
 
